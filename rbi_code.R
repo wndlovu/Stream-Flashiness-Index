@@ -37,6 +37,9 @@ q2010_2 <- q2010 %>%
          miles_day = miles3_day/drainageArea$drain_area_va, #divide by area to get mi/day
          mm_day = miles_day*(1609.344*1000))    
 
+# cut-off dates from Oct 1 for rain year. 
+breaks <- seq(as.Date("2009-10-01"), length=3, by="year")
+q2010_2$hydroYear <- cut(q2010_2$Date, breaks, labels=2010:2011)
 
 qdiff <- 0
 for (i in 2:length(q2010$X_00060_00003)){
