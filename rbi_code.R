@@ -33,7 +33,7 @@ drainageArea <- readNWISsite(siteNumber) %>%
 
 q2010_2 <- q2010 %>% 
   mutate(miles3_s = X_00060_00003/147197940448.88, # cfs to mi3/s
-         miles3_day = miles3_s/86400,              # mi3/s to mi3/day
+         miles3_day = miles3_s*86400,              # mi3/s to mi3/day
          miles_day = miles3_day/drainageArea$drain_area_va, #divide by area to get mi/day
          mm_day = miles_day*(1609.344*1000))    
 
