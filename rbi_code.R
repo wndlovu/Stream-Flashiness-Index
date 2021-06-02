@@ -4,14 +4,15 @@ install.packages("dataRetrieval")
 library(ggplot2)
 library(tidyverse)
 library(dataRetrieval)
+library(lubridate)
 
 # USGS Gage #
 siteNumber <- "01076500" # Pemigewasset R - Hubbard Brook
 
 parameterCd <- "00060"  # Discharge
 startDate <- "2009-10-01"  
-endDate <- "2010-09-30"
-
+#endDate <- "2010-09-30"
+endDate <- ymd(startDate) + years(2) # download data for 2 more yrs
 
 # Q is in CFS
 q2010 <- readNWISdv(siteNumber,parameterCd,startDate, endDate)
@@ -63,3 +64,4 @@ rbi <- sum(abs(qdiff))/sum(q2010$X_00060_00003)
 
 # References
 # https://rpubs.com/tbiggs/GEOG576_Exercise_4v2
+# https://stackoverflow.com/questions/3312964/how-to-subtract-years
