@@ -45,10 +45,10 @@ q2010_2 <- q2010 %>%
 
 
 # Add the water year variable to q2010_2 - method 2 
-breaks <- seq(as.Date("2009-10-01"), length=3, by="year")  # breaks starting Oct 1, 2009
+breaks <- seq(as.Date(q2010_2$Date[1]), length=length(q2010_2$Date), by="year")  # breaks starting from first date 
 years_breaks = as.numeric(format(breaks,"%Y")) # extract year from Date
 labels_water_year = years_breaks[2:length(breaks)]   
-q2010_2$wateryear <- cut(q2010_2$Date, breaks,labels=labels_water_year)
+q2010_2$waterYear <- cut(q2010_2$Date, breaks,labels=labels_water_year)
 
 
 qdiff <- 0
