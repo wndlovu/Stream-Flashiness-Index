@@ -37,9 +37,19 @@ q2010_2 <- q2010 %>%
          miles_day = miles3_day/drainageArea$drain_area_va, #divide by area to get mi/day
          mm_day = miles_day*(1609.344*1000))    
 
-# cut-off dates from Oct 1 for rain year. 
-breaks <- seq(as.Date("2009-10-01"), length=3, by="year")
-q2010_2$hydroYear <- cut(q2010_2$Date, breaks, labels=2010:2011)
+
+# # Add the water year variable to q2010_2 - method 1 (cut-off dates from Oct 1 for water year). 
+# method 1 is hard-coded, so prefer method2
+#breaks <- seq(as.Date("2009-10-01"), length=3, by="year")
+#q2010_2$hydroYear <- cut(q2010_2$Date, breaks, labels=2010:2011)
+
+
+# Add the water year variable to q2010_2 - method 2 
+breaks <- seq(as.Date("2009-10-01"), length=3, by="year")  # breaks starting Oct 1, 2009
+years_breaks = as.numeric(format(breaks,"%Y")) # extract year from Date
+labels_water_year = years_breaks[2:length(breaks)]   
+q2010_2$wateryear <- cut(q2010_2$Date, breaks,labels=labels_water_year)
+
 
 qdiff <- 0
 for (i in 2:length(q2010$X_00060_00003)){
@@ -51,4 +61,5 @@ for (i in 2:length(q2010$X_00060_00003)){
 rbi <- sum(abs(qdiff))/sum(q2010$X_00060_00003)
 
 
-
+# References
+# https://rpubs.com/tbiggs/GEOG576_Exercise_4v2
