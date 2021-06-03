@@ -59,11 +59,19 @@ qdiff <- 0    # initialise discharge difference between 2 days
 year_num <- 0 # initialise year counter
 rbi_values <- 0 # unitialise calculated rbi
 
+site_num <- 0
+
+
+
 for (t in unique(q2010_2$waterYear)){ # loop through the waterYear and select all unique values
   year_num <- year_num + 1 # first unique waterYear is counted as year 1
   year2 <- filter(q2010_2, waterYear == t) # filter for all unique waterYears
-  for (i in 2:length(year2$X_00060_00003)){ # offset discharge values by 1
-    qdiff[i] <- year2$mm_day[i] - year2$mm_day[i-1] # take the difference between qi and qi-1
+  for (s in unique(year2$site_no)){ # trying to loop over each site 
+    site_num <- site_num + 1
+    sites <- filter(year2, site_no == s)
+    for (i in 2:length(year2$X_00060_00003)){ # offset discharge values by 1
+      qdiff[i] <- year2$mm_day[i] - year2$mm_day[i-1] # take the difference between qi and qi-1
+    }
   }
   rbi_values[year_num] <- (sum(abs(qdiff))/sum(year2$mm_day)) # and calculate rbi for each year number
 }
@@ -77,8 +85,7 @@ rbi_values_df <- rbi_values_df %>%
   mutate(observation = 1:n())
 
 # create data frame with the water years and rename variable to water year
-years_all <- data.frame(unique(q2010_2$waterYear))
-years_all_df <- as.data.frame(years_all)
+years_all_df <- as.data.frame(unique(q2010_2$waterYear))
 colnames(years_all_df) <- "water_Year"
 # add new variable that counts the rows
 years_all_df <- years_all_df %>% 
