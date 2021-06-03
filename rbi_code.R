@@ -5,14 +5,15 @@ library(ggplot2)
 library(tidyverse)
 library(dataRetrieval)
 library(lubridate)
+library(data.table)
 
-# USGS Gage #
-siteNumber <- "01076500" # Pemigewasset R - Hubbard Brook
+# USGS Gage # site in Maine
+siteNumber <- "01011000" # Pemigewasset R - Hubbard Brook
 
 parameterCd <- "00060"  # Discharge
-startDate <- "2009-10-01"  
+startDate <- "1970-10-01"   
 #endDate <- "2010-09-30"
-endDate <- ymd(startDate) + years(2) # download data for 2 more yrs
+endDate <- ymd(startDate) + years(50) # download data for 50 more yrs
 
 # Q is in CFS
 q2010 <- readNWISdv(siteNumber,parameterCd,startDate, endDate)
@@ -66,6 +67,29 @@ for (t in unique(q2010_2$waterYear)){ # loop through the waterYear and select al
   }
   rbi_values[year_num] <- (sum(abs(qdiff))/sum(year2$mm_day)) # and calculate rbi for each year number
 }
+
+
+# create data frame with rbi values and rename the variable to rbi
+rbi_values_df <- as.data.frame(rbi_values)
+colnames(rbi_values_df) <- "rbi"
+#add new variable that counts the rows
+rbi_values_df <- rbi_values_df %>% 
+  mutate(observation = 1:n())
+
+# create data frame with the water years and rename variable to water year
+years_all <- data.frame(unique(q2010_2$waterYear))
+years_all_df <- as.data.frame(years_all)
+colnames(years_all_df) <- "water_Year"
+# add new variable that counts the rows
+years_all_df <- years_all_df %>% 
+  mutate(observation = 1:n())
+
+#create water year and rbi dataframe by joining the dataframes
+wy_rbi <- years_all_df %>% 
+  left_join(rbi_values_df) %>% 
+  select(observation, water_Year, rbi)
+
+
 
 
 
