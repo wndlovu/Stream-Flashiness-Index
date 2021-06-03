@@ -52,14 +52,21 @@ labels_water_year = years_breaks[2:length(breaks)]
 q2010_2$waterYear <- cut(q2010_2$Date, breaks,labels=labels_water_year)
 
 
-qdiff <- 0
-for (i in 2:length(q2010$X_00060_00003)){
-  qdiff[i] <- q2010$X_00060_00003[i] - q2010$X_00060_00003[i-1]
-  # take the difference between qi and qi-1
-  # take the absolute value
+
+
+qdiff <- 0    # initialise discharge difference between 2 days
+year_num <- 0 # initialise year counter
+rbi_values <- 0 # unitialise calculated rbi
+
+for (t in unique(q2010_2$waterYear)){ # loop through the waterYear and select all unique values
+  year_num <- year_num + 1 # first unique waterYear is counted as year 1
+  year2 <- filter(q2010_2, waterYear == t) # filter for all unique waterYears
+  for (i in 2:length(year2$X_00060_00003)){ # offset discharge values by 1
+    qdiff[i] <- year2$mm_day[i] - year2$mm_day[i-1] # take the difference between qi and qi-1
+  }
+  rbi_values[year_num] <- (sum(abs(qdiff))/sum(year2$mm_day)) # and calculate rbi for each year number
 }
 
-rbi <- sum(abs(qdiff))/sum(q2010$X_00060_00003)
 
 
 # References
