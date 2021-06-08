@@ -12,7 +12,7 @@ library(lubridate)
 1019000
 
 sites_data_list <- list() #create an empty list to add the site data into
-site_nums <- list("1011000", "1013500") # list of site numbers
+site_nums <- list("1011000", "1013500", "1017000", "1019000") # list of site numbers
 
 for (i in 1:length(site_nums)){
   parameterCd <- "00060" # dicharge parameter
