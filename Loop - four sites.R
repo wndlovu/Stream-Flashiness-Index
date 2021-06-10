@@ -6,15 +6,15 @@ library(dataRetrieval)
 library(lubridate)
 
 
-site_nums <- read_csv("nesites.csv") %>% 
-  mutate(STAID = as.character(paste0("0", STAID)))
+site_nums <- read_csv("nesites.csv") %>% # read sites list into R
+  mutate(STAID = as.character(paste0("0", STAID))) # add a 0 to start of all sites
 
 
-site_nums <- as.character(site_nums$STAID)
+site_nums <- as.character(site_nums$STAID) # re-save data as array
 
 # create a dataframe with the area for each site
 drainageArea_df <- data.frame(readNWISsite(site_nums)) %>% 
-  select(site_no, drain_area_va)
+  select(site_no, drain_area_va) # select the site_no and drain area
 
 
 sites_data_list <- list() #create an empty list to add the site data into
@@ -62,15 +62,15 @@ rbi <- function(Q){
 s <- rbi(Q=Q1)
 
 
-rbi_wy_list = list()
+rbi_wy_list = list() # create empty list for rbi and wy values
 for (t in 1:length(sites_data_list)){ # for every site in the sites data list
-  rbi_wy <- data.frame(matrix(ncol = 2, nrow = length(unique(sites_data_list[[t]]$waterYear))))
-  rbi_wy$X1 =  unique(sites_data_list[[t]]$waterYear)# create df and save the waterYear
-  colnames(rbi_wy)[1] <- "waterYear" # rename variable to waterYear
-  colnames(rbi_wy)[2] <- "rbiValue" 
-  rbi_wy_list[[t]] <- rbi_wy # add the 
+  rbi_wy <- data.frame(matrix(ncol = 2, nrow = length(unique(sites_data_list[[t]]$waterYear)))) # create data frame with 2 columns
+  rbi_wy$X1 =  unique(sites_data_list[[t]]$waterYear)# make unique waterYear the first variable
+  colnames(rbi_wy)[1] <- "waterYear" # rename 1st variable to waterYear
+  colnames(rbi_wy)[2] <- "rbiValue" # rename 2nd variable to rbiValue
+  rbi_wy_list[[t]] <- rbi_wy # add the rbi_wy dataframes for each year to the rbi_wy_list 
   
-  rbi_values_df <- data.frame() 
+  rbi_values_df <- data.frame() # create an empty df for rbi values
   # loop that calculates rbi for all the waterYears
   for (s in unique(sites_data_list[[t]]$waterYear)){ # for every site get all the waterYears 
     year2 <- filter(sites_data_list[[t]], waterYear == s)
@@ -79,6 +79,6 @@ for (t in 1:length(sites_data_list)){ # for every site in the sites data list
     rbi_values_df <- rbind(rbi_values_df,calc_rbi) # append the calc_rbi to rbi_values df
     #rbi_wy_list[[t]] <- rbi_values_df
   }
-  rbi_wy$rbiValue <- rbi_values_df$rbi_val
-  rbi_wy_list[[t]] <- rbi_wy
+  rbi_wy$rbiValue <- rbi_values_df$rbi_val # add rbi values to the rbiValue in rbi_wy 
+  rbi_wy_list[[t]] <- rbi_wy # add the new rbi_wy dataframes with rbi and WY to the rbi_wy_list 
 }
