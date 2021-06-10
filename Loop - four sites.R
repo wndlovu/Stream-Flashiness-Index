@@ -6,13 +6,11 @@ library(dataRetrieval)
 library(lubridate)
 
 
-01011000
-01013500
-01017000
-01019000
+site_nums <- read_csv("nesites.csv") %>% 
+  mutate(STAID = as.character(paste0("0", STAID)))
 
 
-site_nums <- c("01011000", "01013500", "01017000", "01019000") # list of site numbers
+site_nums <- as.character(site_nums$STAID)
 
 # create a dataframe with the area for each site
 drainageArea_df <- data.frame(readNWISsite(site_nums)) %>% 
@@ -64,20 +62,23 @@ rbi <- function(Q){
 s <- rbi(Q=Q1)
 
 
-rbi_values_df <- data.frame() # create df to save calculate rbi values
 rbi_wy_list = list()
 for (t in 1:length(sites_data_list)){ # for every site in the sites data list
-  rbi_wy = data.frame(waterYear = unique(sites_data_list[[t]]$waterYear))# create df and save the waterYear
+  rbi_wy <- data.frame(matrix(ncol = 2, nrow = length(unique(sites_data_list[[t]]$waterYear))))
+  rbi_wy$X1 =  unique(sites_data_list[[t]]$waterYear)# create df and save the waterYear
   colnames(rbi_wy)[1] <- "waterYear" # rename variable to waterYear
+  colnames(rbi_wy)[2] <- "rbiValue" 
   rbi_wy_list[[t]] <- rbi_wy # add the 
   
+  rbi_values_df <- data.frame() 
   # loop that calculates rbi for all the waterYears
   for (s in unique(sites_data_list[[t]]$waterYear)){ # for every site get all the waterYears 
     year2 <- filter(sites_data_list[[t]], waterYear == s)
     rbi_val <- rbi(Q = year2$mm_day) # call the function and calculate rbi
     calc_rbi <- data.frame(rbi_val) # add each calculated rbi to calc_rbi dataframe
     rbi_values_df <- rbind(rbi_values_df,calc_rbi) # append the calc_rbi to rbi_values df
-    rbi_wy_list[[t]] <- rbi_values_df
+    #rbi_wy_list[[t]] <- rbi_values_df
   }
-  #rbi_wy$rbiValue <- rbi_values_df$rbi_val
-}  
+  rbi_wy$rbiValue <- rbi_values_df$rbi_val
+  rbi_wy_list[[t]] <- rbi_wy
+}
