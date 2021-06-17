@@ -4,10 +4,11 @@ library(ggplot2)
 library(tidyverse)
 library(dataRetrieval)
 library(lubridate)
-library (plyr)
+library(plyr)
 library(purrr)
+library(readr)
 
-site_nums <- read_csv("nesites.csv") %>% # read sites list into R
+site_nums <- read_csv("rbi_Values_Code/nesites.csv")%>% # read sites list into R
   mutate(STAID = as.character(paste0("0", STAID))) # add a 0 to start of all sites
 
 site_nums <- as.character(site_nums$STAID) # re-save data as array
