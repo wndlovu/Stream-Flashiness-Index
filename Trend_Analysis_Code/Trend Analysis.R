@@ -6,11 +6,12 @@ library(dataRetrieval)
 library(lubridate)
 library(trend)
 library(Kendall)
-library (plyr)
+library(plyr)
 library(purrr)
+library(zoo)
 
 
-rbiWy_dfAll <- read_csv("rbiWy_dfAll.csv")
+# first import rbiWy_dfAll.csv file from the folder
 
 mannKendall_analysis_df <- data.frame()
 sensSlope_analysis_df <- data.frame()
@@ -57,11 +58,6 @@ sensSlope_analysis_df <- sensSlope_analysis_df %>%
          data.name, method, parameter, conf.int, conf.int2)
 
 
-x <- rbiWy_dfAll %>% 
-  select(waterYear, `01011000`)
-
-m <- as.ts(read.zoo(x))
-sens.slope(m)
 
 
 
