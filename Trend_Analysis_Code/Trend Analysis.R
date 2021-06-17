@@ -11,7 +11,7 @@ library(purrr)
 library(zoo)
 
 
-# first import rbiWy_dfAll.csv file from the folder
+rbiWy_dfAll <- read_csv("Trend_Analysis_Code/rbiWy_dfAll.csv") #first import rbiWy_dfAll.csv file from the folder
 
 mannKendall_analysis_df <- data.frame()
 sensSlope_analysis_df <- data.frame()
