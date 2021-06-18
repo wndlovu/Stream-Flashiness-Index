@@ -9,6 +9,7 @@ library(Kendall)
 library(plyr)
 library(purrr)
 library(zoo)
+options(scipen = 999)
 
 
 rbiWy_dfAll <- read_csv("Trend_Analysis_Code/rbiWy_dfAll.csv") #first import rbiWy_dfAll.csv file from the folder
