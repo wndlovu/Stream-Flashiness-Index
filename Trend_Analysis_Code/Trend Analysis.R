@@ -9,6 +9,7 @@ library(Kendall)
 library(plyr)
 library(purrr)
 library(zoo)
+options(scipen = 999)
 
 
 rbiWy_dfAll <- read_csv("Trend_Analysis_Code/rbiWy_dfAll.csv") #first import rbiWy_dfAll.csv file from the folder
@@ -56,8 +57,5 @@ rownames(sensSlope_analysis_df) <- NULL
 sensSlope_analysis_df <- sensSlope_analysis_df %>% 
   select(site_no, estimates, statistic, p.value, null.value, alternative, 
          data.name, method, parameter, conf.int, conf.int2)
-
-
-
 
 
