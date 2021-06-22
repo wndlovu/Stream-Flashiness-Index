@@ -59,3 +59,7 @@ sensSlope_analysis_df <- sensSlope_analysis_df %>%
          data.name, method, parameter, conf.int, conf.int2)
 
 
+
+
+
+
