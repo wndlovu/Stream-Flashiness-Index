@@ -14,6 +14,7 @@ site_nums <- read_csv("rbi_Values_Code/nesites.csv")%>% # read sites list into R
 site_nums <- as.character(site_nums$STAID) # re-save data as array
 
 
+
 # create a dataframe with the area for each site
 drainageArea_df <- data.frame(readNWISsite(site_nums)) %>% 
   select(site_no, drain_area_va) # select the site_no and drain area
