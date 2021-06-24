@@ -39,9 +39,11 @@ plot_data <- rbiWy_1971_2020 %>%
   mutate(binary_pvalue = as.factor(ifelse(p.value < 0.05, 'significant', 'non-significant')), # when p.value is <0.05, binary_pvalue = significant
          slope_greater0 = as.factor(ifelse(estimates > 0, 'true', 'false'))) # when slope is greater than 0, slope_greater0 = true
 
+# create color blind palette
 safe_colorblind_palette <- c("#88CCEE",  "grey", "navy", "#117733", "#999933", "#AA4499", "black", 
                              "#44AA99", "#999933", "#882255", "#661100", "orange", "orange")
 
+# make plots
 plot1971 <- ggplot(plot_data, aes(x = rbiValue_1970, y = estimates, color = binary_pvalue))+
   geom_point()+
   labs(x = "RBI 1971", 
