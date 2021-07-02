@@ -17,7 +17,7 @@ site_nums <- as.character(site_nums$STAID) # re-save data as array
 
 # create a dataframe with the area for each site
 drainageArea_df <- data.frame(readNWISsite(site_nums)) %>% 
-  select(site_no, drain_area_va) # select the site_no and drain area
+  select(site_no, drain_area_va, dec_lat_va, dec_long_va) # select the site_no and drain area
 
 
 sites_data_list <- list() #create an empty list to add the site data into
