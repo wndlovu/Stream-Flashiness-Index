@@ -39,7 +39,19 @@ damRemoval_analysisSTAID <- damRemoval %>%
 damRemoval_analysisSTAID
 
 
+# dam removal trends
+damRemoval_trends <- damRemoval %>% 
+  mutate(STAID = as.character(paste0("0", STAID))) %>% 
+  left_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
+  filter(p.value <= 0.05) %>% 
+  mutate(highlight_flag = ifelse(estimates > 0, "upward", "downward"))
+  
 
+damRemoval_trends2 <- drainageArea_df
+
+
+
+# imperviousness analysis
 
 #Imperv-Canopy: Three tables with percent imperviousness from the National 
 #Land Cover Dataset (NLCD) (every five years, 2001-2011) and from the NAWQA Wall-to-wall
@@ -71,45 +83,26 @@ colnames(imperv)[14] <- "2012"
 
 imperv_pivoted <- imperv %>% 
   pivot_longer(cols = '1974':'2012', names_to = "year", values_to = "imperv_value") %>% 
-  mutate(highlight_flag = ifelse(imperv_value > 20, "urban", "rural"))
+  mutate(highlight_flag = ifelse(imperv_value > 20, "urban", "rural")) # sites with imper_value greater than 20% are urban
 
 
-# landuse
+# developed land analysis
 developedLandUse_NLCD <- read.table("U_S_GeologicalS/Dataset5_LandUse/LandUse_NLCD_2001.txt",sep=",",header=T) %>% 
   left_join(read.table("U_S_GeologicalS/Dataset5_LandUse/LandUse_NLCD_2006.txt",sep=",",header=T)) %>% 
   left_join(read.table("U_S_GeologicalS/Dataset5_LandUse/LandUse_NLCD_2011.txt",sep=",",header=T)) %>% 
   filter(STAID %in% sites$STAID) %>% 
-  select(STAID, contains(c("21", "22", "23", "24"))) %>% 
+  select(STAID, contains(c("21", "22", "23", "24"))) %>% # select only the developed land variables
   mutate(STAID = as.character(paste0("0", STAID))) %>% 
   left_join(basinID) %>% 
-  mutate(diff21 = NLCD11_21 - NLCD01_21,
-         diff22 = NLCD11_22 - NLCD01_22,
-         diff23 = NLCD11_23 - NLCD11_23,
-         diff24 = NLCD11_24 - NLCD01_24)
+  mutate('2001' = rowSums(across(starts_with("NLCD01")), na.rm = T), # total developed land in 2001
+         '2006' = rowSums(across(starts_with("NLCD06")), na.rm = T), # total developed land in 2006
+         '2011' = rowSums(across(starts_with("NLCD11")), na.rm = T)) %>% # total developed land in 2011
+  select(1, 14, 19, 15, 17:18, 2:13, 23:25)
 
 
+developedLandUse_NLCDpivoted <- developedLandUse_NLCD %>% 
+  pivot_longer(cols = '2001': '2011', names_to = "year", values_to = "imperv_value") %>% 
+  mutate(type = ifelse(imperv_value > 20, "urban", "rural")) 
 
 
-
-
-# Timber: One table with percent of watershed affected 
-# by timber or forest cutting, annually from 1999-2012.
-timber <- read.table("Timber_1999-2012.txt",sep=",",header=T) %>% 
-  filter(STAID %in% sites_trendAnalysis$STAID)
-
-# forest canopy
-forestCanopy <- read.table("forest_canopy_watershed_and_mainstem_riparian_2011.txt",
-                           sep=",",header=T) %>% 
-  filter(STAID %in% sites_trendAnalysis$STAID)
-
-
-
-
-
-landUse_NWALT_2002 <- read.table("LandUse_NWALT_2002.txt",sep=",",header=T)
-
-remotes::install_github("jmcphers/rsrecovr")
-x <- jsonlite::fromJSON('Stream-Flashiness-Index/U_S_GeologicalS/gagesII_analysis.R')
-
-
-
+ 
