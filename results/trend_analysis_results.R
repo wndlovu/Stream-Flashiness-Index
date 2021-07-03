@@ -4,6 +4,7 @@ library(tidyverse)
 library(lubridate)
 library(janitor)
 library(data.table)
+library(patchwork)
 
 # create trend analysis df with the important variables
 trend_analysis_df <- read_csv("mannKendall_analysis_df.csv") %>% 
@@ -27,3 +28,15 @@ rbiWy_1971_2020 <- setDT(rbiWy_1971_2020, keep.rownames = TRUE)[] %>%
                 rbiValue_2020 = '2020')
   
 #write_csv(rbiWy_1971_2020, "rbiWy_1971_2020.csv")
+
+plot_data <- rbiWy_1971_2020 %>% 
+  left_join(trend_analysis_df) %>% 
+  mutate(binary_pvalue = as.factor(ifelse(p.value < 0.05, 1, 0)))
+
+plot1971 <- ggplot(plot_data, aes(x = rbiValue_1970, y = estimates, color = binary_pvalue))+
+  geom_point()
+
+plot2020 <- ggplot(plot_data, aes(x = rbiValue_2020, y = estimates, color = binary_pvalue))+
+  geom_point()
+
+plot1971 + plot2020
