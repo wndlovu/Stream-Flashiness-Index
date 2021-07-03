@@ -10,7 +10,8 @@ basinID <- read.table("U_S_GeologicalS/Dataset1_BasinID/BasinID.txt",sep=",",hea
 
 #Dam removals
 damRemoval <- read.table("U_S_GeologicalS/Dataset3_DamRemovals/DamRemovals.txt",sep=",",header=T)%>%
-  filter(STAID %in% sites$STAID) 
+  filter(STAID %in% sites$STAID) %>% 
+  mutate(STAID = as.character(paste0("0", STAID)))
 
 
 # dam removal analysis 
@@ -34,20 +35,27 @@ damRemoval_analysisSTAID <- damRemoval %>%
   count() %>% 
   dplyr::rename(num_dams = n) %>% 
   arrange(desc(num_dams)) %>% 
-  mutate(STAID = as.character(paste0("0", STAID))) %>% 
   left_join(basinID)
 damRemoval_analysisSTAID
 
 
 # dam removal trends
 damRemoval_trends <- damRemoval %>% 
-  mutate(STAID = as.character(paste0("0", STAID))) %>% 
   left_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
   filter(p.value <= 0.05) %>% 
   mutate(highlight_flag = ifelse(estimates > 0, "upward", "downward"))
   
 
-damRemoval_trends2 <- drainageArea_df
+# check trends
+damRemoval_trends2 <- damRemoval %>% 
+  full_join(read_csv("site_nums.csv"), by = c("STAID" = "STAID")) %>% 
+  mutate(YearDamRemoved = replace(YearDamRemoved,is.na(YearDamRemoved),0),
+         damRemoved = ifelse(YearDamRemoved == 0, "No Dam Removed", "Dam Removed")) %>% # have 0 as a place holder for years when there are no dam removals
+  full_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
+  filter(p.value <= 0.05)
+
+
+
 
 
 
@@ -105,4 +113,10 @@ developedLandUse_NLCDpivoted <- developedLandUse_NLCD %>%
   mutate(type = ifelse(imperv_value > 20, "urban", "rural")) 
 
 
+# reference sites
+reference_sites <- imperv_pivoted %>% 
+  filter(imperv_value < 5) %>% 
+  full_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
+  mutate(lat = as.numeric(LAT_GAGE),
+         long = as.numeric(LNG_GAGE))
  
