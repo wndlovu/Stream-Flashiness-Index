@@ -22,10 +22,13 @@ damRemoval_analysisBasin <- damRemoval %>%
   arrange(desc(num_dams))
 damRemoval_analysisBasin
 
-ggplot()
+damRemoval_analysisYear <- damRemoval %>% 
+  group_by(YearDamRemoved) %>% 
+  count() %>% 
+  dplyr::rename(num_dams = n) %>% 
+  arrange(desc(num_dams))
+  
 
-# most dams (8) removed in 2013 at 01463500 (DELAWARE RIVER AT TRENTON NJ)
-# dams ermoved due to floding
 damRemoval_analysisSTAID <- damRemoval %>% 
   group_by(STAID, YearDamRemoved) %>% 
   count() %>% 
@@ -36,13 +39,7 @@ damRemoval_analysisSTAID <- damRemoval %>%
 damRemoval_analysisSTAID
 
 
-# no trend
-ggplot(y, aes(y = n, x = DRAIN_SQKM))+
-  geom_point()
 
-
-#STAID shows site number but focus on the lat and long
-site 01453000
 
 #Imperv-Canopy: Three tables with percent imperviousness from the National 
 #Land Cover Dataset (NLCD) (every five years, 2001-2011) and from the NAWQA Wall-to-wall
@@ -54,16 +51,27 @@ imperv <- read.table("U_S_GeologicalS/Dataset4_Imperviousness-Canopy/imperv_NLCD
   select(STAID, imperv1974est, imperv1982est, 
          imperv1992est, imperv2001, imperv2002est,
          imperv2006, imperv2011, imperv2012est) %>% 
-  mutate(percent_diff = imperv2011 - imperv2001,
-        percent_diff_est = imperv2012est - imperv1974est) %>% 
+  mutate(percent_diff = imperv2011 - imperv2001) %>% 
   mutate(STAID = as.character(paste0("0", STAID))) %>% 
   left_join(basinID) %>% 
-  arrange(desc(percent_diff_est))
+  mutate(DRAIN_SQKM = as.numeric(DRAIN_SQKM)) %>% 
+  select(1, 11, 16, 12, 14:15, 2:10) %>% 
+  arrange(desc(percent_diff))
 
-# no trend
-ggplot(imperv, aes(x = DRAIN_SQKM, y = percent_diff_est))+
-  geom_point()
 
+colnames(imperv)[7] <- "1974"
+colnames(imperv)[8] <- "1982"
+colnames(imperv)[9] <- "1992"
+colnames(imperv)[10] <- "2001"
+colnames(imperv)[11] <- "2002"
+colnames(imperv)[12] <- "2006"
+colnames(imperv)[13] <- "2011"
+colnames(imperv)[14] <- "2012"
+
+
+imperv_pivoted <- imperv %>% 
+  pivot_longer(cols = '1974':'2012', names_to = "year", values_to = "imperv_value") %>% 
+  mutate(highlight_flag = ifelse(imperv_value > 20, "urban", "rural"))
 
 
 # landuse
