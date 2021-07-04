@@ -33,6 +33,31 @@ ggplot(damRemoval_analysisYear, aes(x = YearDamRemoved, y = num_dams))+
   geom_point()+
   geom_smooth()
 
+# is there a pattern between trends and when dams are removed
+ggplot(damRemoval_trends, aes(x = YearDamRemoved, y = estimates, color = highlight_flag))+
+  geom_point()+
+  labs(x = "Year dam removed",
+       y = "Theil sen slope")+
+  theme_bw()+
+  theme_clean()+
+  theme(legend.position = "none")
+
+
+# still have to change this and factor the year
+ggplot(damRemoval_trends2, aes(x = damRemoved, y = estimates, fill = damRemoved)) +
+  geom_violin(trim = FALSE) + 
+  stat_summary(
+    fun.data = "mean_sdl",  fun.args = list(mult = 1), 
+    geom = "pointrange", color = "black"
+  )+
+  geom_jitter(alpha = 0.3, size = 0.5, width=0.3) +
+  scale_fill_manual(values = safe_colorblind_palette)+
+  #facet_wrap(~YearDamRemoved)+
+  theme_clean()+
+  theme(legend.position = "none",
+        axis.title.x = element_blank())+
+  labs(y = "Theil sen slope")
+
 
 
 # most development (higher imperv percent diff) occuring in areas with smaller watersheds
@@ -85,15 +110,16 @@ ggplot(imperv_pivoted, aes(x = imperv_value, fill = highlight_flag))+
   
 
 
-# using developed land cover of > 8%
-ggplot(developedLandUse_NLCDpivoted, aes(x = total_sites, fill = total_sites))+
+# using developed land cover of > 20%
+ggplot(developedLandUse_NLCDpivoted, aes(x = type, fill = type))+
   #geom_bar()+
   geom_bar(stat = "count") + 
   #stat_count(geom = "text",
              #aes(label = ..count..))+
-  geom_text(stat='count', aes(label=..count..), vjust=-.25, size = 2)+
+  geom_text(stat='count', aes(label=..count..), vjust=-.25, size = 2.5)+
   scale_y_continuous(limits = c(0,100,10))+
-  facet_grid(type~STATE)+
+  facet_grid(year~STATE)+
+  #facet_grid(type~STATE)+
   scale_fill_manual(values = safe_colorblind_palette, labels = c("rural", "urban"))+
   #theme_classic()+
   theme_bw() +
@@ -108,7 +134,7 @@ ggplot(developedLandUse_NLCDpivoted, aes(x = total_sites, fill = total_sites))+
     strip.text.x = element_text(size = 7),
     strip.text.y = element_text(size = 5.5),
     #legend.position = "bottom",
-    strip.background = element_rect(fill="grey90", size=1, color = "grey90"),
+    strip.background = element_rect(fill="grey90", size=2, color = "grey90"),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(), 
     legend.position = "bottom",
@@ -120,8 +146,7 @@ ggplot(developedLandUse_NLCDpivoted, aes(x = total_sites, fill = total_sites))+
   labs(y = "Number of sites")
 
 
-ggplot(damRemoval_trends, aes(x = YearDamRemoved, y = estimates))+
-  geom_point(alpha = 0.3)
+
 
 
 ggplot(damRemoval_trends2, aes(x = damRemoved, y = estimates, fill = damRemoved)) +
@@ -139,16 +164,21 @@ ggplot(damRemoval_trends2, aes(x = damRemoved, y = estimates, fill = damRemoved)
 
 # reference sites 
 ggplot(reference_sites, aes(x = DRAIN_SQKM, y = estimates)) +
-  geom_point()+
- # scale_x_log10()+
+  geom_point(alpha = 0.3)+
+  scale_x_log10()+
   labs(y = "Theil sen slope",
-       x = "Drainage Area (sqkm)")
+       x = "Drainage Area (sqkm)")+
+  theme_bw()+
+  theme_clean()
 
 # bbox for reference_sites xmin: -78.67697 ymin: 38.22892 xmax: -67.7688 ymax: 47.23739
 
 # data(us.cities)
 # capitals <- subset(us.cities, capital == 2)
 
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# all reference sites
 ggplot(data = world) +
   geom_sf(fill = "white") +
   #annotation_map_tile(zoom = 6, type = "osm") + 
@@ -182,7 +212,8 @@ ggplot(data = world) +
         axis.ticks = element_blank(),
         axis.title = element_blank())+
   theme_map()
-  
-x <- loadhistory(file = ".Rhistory")
 
-data <- jsonlite::fromJSON('Rproj.user/DA1C67D4/unsaved-noteboooks/44D4744D')
+
+
+  
+
