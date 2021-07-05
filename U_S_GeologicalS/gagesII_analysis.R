@@ -2,6 +2,7 @@ library(tidyverse)
 library(dataRetrieval)
 library(lubridate)
 library(ggx)
+options(scipen = 999)
 
 sites <- read_csv("rbi_Values_Code/nesites.csv")
 
@@ -39,7 +40,7 @@ damRemoval_analysisSTAID <- damRemoval %>%
 damRemoval_analysisSTAID
 
 
-# dam removal trends
+# dam removal trends (siginificant p value)
 damRemoval_trends <- damRemoval %>% 
   left_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
   filter(p.value <= 0.05) %>% 
@@ -71,12 +72,12 @@ imperv <- read.table("U_S_GeologicalS/Dataset4_Imperviousness-Canopy/imperv_NLCD
   select(STAID, imperv1974est, imperv1982est, 
          imperv1992est, imperv2001, imperv2002est,
          imperv2006, imperv2011, imperv2012est) %>% 
-  mutate(percent_diff = imperv2011 - imperv2001) %>% 
-  mutate(STAID = as.character(paste0("0", STAID))) %>% 
+  mutate(imperv_percent_diff = imperv2012est - imperv1974est,
+         STAID = as.character(paste0("0", STAID))) %>% 
   left_join(basinID) %>% 
   mutate(DRAIN_SQKM = as.numeric(DRAIN_SQKM)) %>% 
   select(1, 11, 16, 12, 14:15, 2:10) %>% 
-  arrange(desc(percent_diff))
+  arrange(desc(imperv_percent_diff))
 
 
 colnames(imperv)[7] <- "1974"
@@ -104,8 +105,9 @@ developedLandUse_NLCD <- read.table("U_S_GeologicalS/Dataset5_LandUse/LandUse_NL
   left_join(basinID) %>% 
   mutate('2001' = rowSums(across(starts_with("NLCD01")), na.rm = T), # total developed land in 2001
          '2006' = rowSums(across(starts_with("NLCD06")), na.rm = T), # total developed land in 2006
-         '2011' = rowSums(across(starts_with("NLCD11")), na.rm = T)) %>% # total developed land in 2011
-  select(1, 14, 19, 15, 17:18, 2:13, 23:25)
+         '2011' = rowSums(across(starts_with("NLCD11")), na.rm = T), # total developed land in 2011
+         developed_percent_diff = `2011` - `2001`) %>% 
+  select(1, 14, 19, 15, 17:18, 2:13, 23:26)
 
 
 developedLandUse_NLCDpivoted <- developedLandUse_NLCD %>% 
@@ -117,6 +119,19 @@ developedLandUse_NLCDpivoted <- developedLandUse_NLCD %>%
 reference_sites <- imperv_pivoted %>% 
   filter(imperv_value < 5) %>% 
   full_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% 
-  mutate(lat = LAT_GAGE,
-         long = LNG_GAGE)
+  mutate(lat = as.numeric(LAT_GAGE),
+         long = as.numeric(LNG_GAGE))
  
+
+imperv_developed <- developedLandUse_NLCD %>% 
+  left_join(imperv, by = c("STAID" = "STAID")) %>% 
+  left_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>%
+  select(1:6, 22, 36:41) %>% 
+  filter(p.value <= 0.05) %>% 
+  pivot_longer(cols = developed_percent_diff:imperv_percent_diff, names_to = "type", values_to = "percent_diff")
+
+trends <- basinID %>% 
+  filter(STAID %in% sites$STAID) %>% 
+  left_join(basinID)
+
+  

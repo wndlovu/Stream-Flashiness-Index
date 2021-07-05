@@ -107,7 +107,7 @@ ggplot(imperv_pivoted, aes(x = imperv_value, fill = highlight_flag))+
   )+
   labs(x = "Percent Imperviousness",
        y = "Number of sites")
-  
+
 
 
 # using developed land cover of > 20%
@@ -115,7 +115,7 @@ ggplot(developedLandUse_NLCDpivoted, aes(x = type, fill = type))+
   #geom_bar()+
   geom_bar(stat = "count") + 
   #stat_count(geom = "text",
-             #aes(label = ..count..))+
+  #aes(label = ..count..))+
   geom_text(stat='count', aes(label=..count..), vjust=-.25, size = 2.5)+
   scale_y_continuous(limits = c(0,100,10))+
   facet_grid(year~STATE)+
@@ -155,7 +155,7 @@ ggplot(damRemoval_trends2, aes(x = damRemoved, y = estimates, fill = damRemoved)
     fun.data = "mean_sdl",  fun.args = list(mult = 1), 
     geom = "pointrange", color = "black"
   )+
-  geom_jitter(alpha = 0.3, size = 0.5, width=0.3, color = "grey") +
+  geom_jitter(alpha = 0.3, size = 0.5, width=0.3, color = "black") +
   scale_fill_manual(values = safe_colorblind_palette)+
   theme_clean()+
   theme(legend.position = "none")+
@@ -183,7 +183,7 @@ ggplot(data = world) +
   geom_sf(fill = "white") +
   #annotation_map_tile(zoom = 6, type = "osm") + 
   borders("state", colour = "black", fill = "grey90") +
-  geom_point(data = reference_sites, aes(x = long, y = lat), size = .5, shape = 21) + 
+  geom_point(data = reference_sites, aes(x = long, y = lat), size = .9, shape = 21, fill = "red") + 
   #scale_fill_gradient2(limits = c(-1.2,1.2),midpoint = 0, low = "#1d1369", mid = "white", high = "#691313", breaks = c(-1.2,-0.5,0,0.5,1.2)) +
   coord_sf(xlim = c(-79.67697,-64.7688), ylim = c(34.22892, 49.23739), expand = FALSE)+
   
@@ -214,6 +214,8 @@ ggplot(data = world) +
   theme_map()
 
 
+ggplot(imperv_developed, aes(x = percent_diff, y = estimates))+
+  geom_point()+
+  facet_grid(~type)
 
-  
 
