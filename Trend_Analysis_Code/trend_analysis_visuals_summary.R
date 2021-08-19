@@ -105,6 +105,8 @@ plot1971_noOutlier <- ggplot(plot_without_outlier, aes(x = rbiValue_1970, y = es
     axis.text = element_text(size = 9)
   )
 
+
+
 plot2020_noOutlier <- ggplot(plot_without_outlier, aes(x = rbiValue_2020, y = estimates, color = binary_pvalue))+
   geom_point()+
   labs(x = "RBI 2020")+
@@ -116,6 +118,10 @@ plot2020_noOutlier <- ggplot(plot_without_outlier, aes(x = rbiValue_2020, y = es
     axis.text.y = element_blank(),
     legend.text = element_text(size = 9),
   )
+
+
+
+
 
 plot1971_noOutlier + plot2020_noOutlier +  coord_cartesian(clip = "off") +
   theme(plot.margin = margin(t = 10, r = 10, b = 40, l = 10),

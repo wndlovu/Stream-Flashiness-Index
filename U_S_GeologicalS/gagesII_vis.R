@@ -62,6 +62,20 @@ ggplot(damRemoval_trends, aes(x = YearDamRemoved, y = estimates, color = highlig
 
 
 
+# Flashiness values (for each year) versus time (for sites with dam removals)
+ggplot(damRemoval_rbi, aes(x = waterYear, y = rbi_val))+
+  geom_point(size = .3)+
+  geom_vline(aes(xintercept = YearDamRemoved, colour = "Year Dam Removed")) +
+  theme_bw()+
+  facet_wrap(~STAID)+
+  theme(axis.text.x = element_text(angle=90),
+        legend.title = element_blank())+
+  
+  labs(x = "Water Year",
+       y = "Flashiness Value")
+
+
+
 
 # Compare trends at sites where dams were removed and sites where there is no dam removal
 ggplot(damsRemovedAtSites, aes(x = damRemoved, y = estimates, fill = damRemoved)) +
@@ -189,7 +203,7 @@ ggplot(data = world) +
         axis.text = element_blank(),
         axis.ticks = element_blank(),
         axis.title = element_blank())+
-  theme_map()#+
+  theme_map() #+
   #with(states, 
        #annotate(geom="text", x = long, y=lat, label = STATE, 
                 #size = 3,color="black",family="Times")

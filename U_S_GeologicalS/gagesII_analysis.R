@@ -53,7 +53,18 @@ damRemoval_trends <- damRemoval %>%
   left_join(read_csv("results/trend_analysis_df.csv"), by = c("STAID" = "site_no")) %>% # join with trend analysis df
   filter(p.value < 0.05) %>% # filter for sites with significant p values
   mutate(highlight_flag = ifelse(estimates > 0, "upward", "downward")) # add variable to classify trends 
+
   
+
+# change variable orientation (create dataframe with WaterYear, STAID and rbi_val)
+rbiWy_dfAll_pivotLong <- read_csv("Trend_Analysis_Code/rbiWy_dfAll.csv") %>% 
+  pivot_longer(cols = starts_with("0"),
+               names_to = "STAID",
+               values_to = "rbi_val") 
+
+# Flashiness values (for each year) versus time (for sites with dam removals)
+damRemoval_rbi <- rbiWy_dfAll_pivotLong %>% 
+  inner_join(damRemoval, by = c("STAID" = "STAID")) # join wit damRemoval df to include all sites with 
 
 
 # Compare trends at sites where dams were removed and sites where there is no dam removal
