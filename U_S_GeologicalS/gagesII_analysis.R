@@ -2,6 +2,7 @@ library(tidyverse)
 library(dataRetrieval)
 library(lubridate)
 library(ggx)
+library(geosphere)
 options(scipen = 999)
 
 
@@ -84,12 +85,18 @@ for (i in 1:length(site_nums)){
 }
 
 # create df with the gauge long and lat plus location of dam removal 
-gaugeSitesDamRemoval <- sites_corodinates_df %>% 
-  select(1:8) %>% 
-  inner_join(damRemoval, by= c("site_no" = "STAID")) #%>% 
-  #filter(dec_long_va == Dam_Longitude) # use filter can check if latitiude for gauge and dam removal for any given site are the same 
+gageSitesDamRemoval <- sites_corodinates_df %>% 
+  select(1:8, 20) %>% 
+  inner_join(damRemoval, by= c("site_no" = "STAID"))
 
 
+gageSitesDamRemoval$distanceMeters<-distHaversine(gageSitesDamRemoval[,7:8], gageSitesDamRemoval[,11:12]) 
+  
+
+gageSitesDamRemoval <- gageSitesDamRemoval%>% 
+  arrange(distanceMeters) 
+
+write.csv(gageSitesDamRemoval, "gageSitesDamRemoval.csv")
 
 # IMPERVIOUSNESS ANALYSIS
 
