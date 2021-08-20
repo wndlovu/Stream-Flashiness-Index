@@ -76,8 +76,18 @@ damsRemovedAtSites <- read_csv("site_nums.csv") %>%
   filter(p.value < 0.05) # filter for sites with significant p value
 
 
+# Check if dam removals are located at the same lat and long as guage stations 
+sites_corodinates_df <- data.frame() #create an empty list to add the site data info
+for (i in 1:length(site_nums)){
+  sites_corodinates <- (as.data.frame(readNWISsite(site_nums[i]))) # read in site description
+  sites_corodinates_df <- rbind(sites_corodinates_df,sites_corodinates) #append site info to df
+}
 
-
+# create df with the gauge long and lat plus location of dam removal 
+gaugeSitesDamRemoval <- sites_corodinates_df %>% 
+  select(1:8) %>% 
+  inner_join(damRemoval, by= c("site_no" = "STAID")) #%>% 
+  #filter(dec_long_va == Dam_Longitude) # use filter can check if latitiude for gauge and dam removal for any given site are the same 
 
 
 
