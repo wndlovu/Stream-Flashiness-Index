@@ -21,6 +21,10 @@ damRemoval <- read.table("U_S_GeologicalS/Dataset3_DamRemovals/DamRemovals.txt",
   filter(STAID %in% sites$STAID) 
 
 
+x <- damRemoval %>% 
+  filter(STAID == 1034500)
+
+
  # dam removal analysis 
 # best to use river basin because of sites sharing the same STAID
 x <- damRemoval %>% 
