@@ -96,7 +96,6 @@ gageSitesDamRemoval$distanceMeters<-distHaversine(gageSitesDamRemoval[,7:8], gag
 gageSitesDamRemoval <- gageSitesDamRemoval%>% 
   arrange(distanceMeters) 
 
-write.csv(gageSitesDamRemoval, "gageSitesDamRemoval.csv")
 
 # IMPERVIOUSNESS ANALYSIS
 
@@ -225,4 +224,77 @@ states <- reference_sites %>%
   select(STATE) %>% 
   distinct(STATE) %>% 
   left_join(centroids, by = c("STATE" = "abb"))
+
+
+#create a table which summarises the USGS dataset for reference and non reference sites using the following format:
+
+#Site classification in the rows
+#(7 site classifications)
+#Columns: Total number of sites, number of sites with positive trends, 
+#number of sites with negative trends, positive trends & significant, negative trends & significant
+
+
+library(readxl)
+
+# join USGS df with trend analysis df
+USGS_sites <- read_excel("U_S_GeologicalS/USGS-sites.xlsx") %>% 
+  right_join(trend_analysis_df, by = c("STAID" = "site_no")) %>% 
+  mutate(trend_type = ifelse(estimates < 0, "negative", "positive"),
+         significance = ifelse(p.value < 0.05, "significant", "not significant")) #%>% 
+  #pivot_longer(cols = c(10, 12, 21:25), names_to = "classification", values_to = "percentage")  #add landuse variables to one column
+  #filter(CLASS != "Ref") # filter for non ref sites
+
+
+
+  
+
+  
+# total num of ref and non-ref sites
+numSites <- USGS_sites %>% 
+  group_by(CLASS) %>% 
+  summarise(totalSites = n())
+          
+# total ref and non-ref sites with positive and negative sites  
+sitesTrends <- USGS_sites %>% 
+  group_by(trend_type, CLASS) %>% 
+  summarise(totalSites = n()) %>% 
+  pivot_wider(names_from = trend_type,
+              values_from = totalSites) %>% 
+  rename(negativeTrends = negative,
+         positiveTrends = positive)
+
+#total number of ref and non-ref sites with +ve trend and significant p or -ve trend and significant p
+siteTrendsSignificance <- USGS_sites %>% 
+  group_by(CLASS, significance, trend_type) %>% 
+  summarise(totalSites = n()) %>% 
+  filter(significance == "significant") %>% 
+  mutate(sigTrend = paste(significance, "-", trend_type)) %>% 
+  ungroup() %>% 
+  select(1,5,4) %>% 
+  pivot_wider(names_from = sigTrend,
+              values_from = totalSites) %>% 
+  rename("negativeTrend - significant" = "significant - negative",
+         "positiveTrend - significant" = "significant - positive")
+
+
+# create one table with all the data
+summaryUSGSAnalysis <- numSites %>% 
+  left_join(sitesTrends) %>% 
+  left_join(siteTrendsSignificance)
+
+
+
+y <- x
+
+numSites <- x %>% 
+  group_by(CLASS,classification) %>% 
+  summarise(totalSites = n())
+
+sitesTrends <-x %>% 
+  group_by(trend_type, classification) %>% 
+  summarise(totalSites = n()) %>% 
+  pivot_wider(names_from = trend_type,
+              values_from = totalSites) %>% 
+  rename(negativeTrends = negative,
+         positiveTrends = positive)
 

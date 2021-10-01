@@ -6,7 +6,7 @@ library(dataRetrieval)
 library(lubridate)
 
 # download discharge data for site 1 and 2 USGS Gage #
-siteNumber1 <- "01011000" # Pemigewasset R - Hubbard Brook
+siteNumber1 <- "01034500" # Pemigewasset R - Hubbard Brook
 siteNumber2 <- "01076500" # Pemigewasset R - Hubbard Brook
 
 parameterCd <- "00060"  # Discharge in cfs
@@ -18,6 +18,13 @@ endDate <- ymd(startDate) + years(50) # download data for 50 more yrs
 # read discharge data and save
 q2010_s1 <- readNWISdv(siteNumber1,parameterCd,startDate, endDate)
 q2010_s2 <- readNWISdv(siteNumber2,parameterCd,startDate, endDate)
+
+
+y <- as.data.frame(readNWISsite(siteNumbers="01034500"))
+
+
+
+
 
 # create a list of the discharge data
 list_data = list(q2010_s1,q2010_s2)
