@@ -355,8 +355,8 @@ display: none;
 <div id="effects-of-land-use-and-precipitation-patterns-on-streamflow-flashiness-trends-in-the-northeast-usa" class="section level1">
 <h1>Effects of land use and precipitation patterns on streamflow
 flashiness trends in the northeast USA</h1>
-<div id="what-is-stream-flashiness" class="section level3">
-<h3>What is stream flashiness?</h3>
+<div id="what-is-stream-flashiness" class="section level2">
+<h2>What is stream flashiness?</h2>
 <ul>
 <li>Stream flashiness is the rapidity and frequency of short term
 changes in the streamflow especially during runoff events.</li>
@@ -364,8 +364,8 @@ changes in the streamflow especially during runoff events.</li>
 discharge and sum of daily discharge</li>
 </ul>
 </div>
-<div id="abstract" class="section level3">
-<h3>Abstract</h3>
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
 <p>Examining long term trends in streamflow signatures is useful for
 understanding how changes in land use and precipitation patterns impact
 streamflow regimes. One particular metric of streamflow regimes that
@@ -394,17 +394,11 @@ indicating that flashiness indices across the NE are both increasing and
 decreasing. These results give us insight into how watershed regimes
 respond to changing climate, infrastructure, and other associated human
 impacts.</p>
-<p>Procedure: To reproduce this analysis you will need to install the
-following packages:</p>
-<p>Available on CRAN: * <code>tidyverse</code> * <code>lubridate</code>
-* <code>ggx</code> * <code>geosphere</code> * <code>ggthemes</code> *
-<code>ggsci</code> * <code>ggpubr</code> * <code>maps</code> *
-<code>sf</code> * <code>sp</code> * <code>rnaturalearth</code> *
-<code>rnaturalearthdata</code> * <code>ggalt</code> * <code>usmap</code>
-* <code>ggsn</code> * <code>ggsci</code> * <code>patchwork</code> *
-<code>cowplot</code> * <code>readr</code></p>
-<p>Available on Github: * <code>easyrbi</code></p>
-<p>To install packages run the following:</p>
+</div>
+<div id="procedure" class="section level2">
+<h2>Procedure</h2>
+<div id="packages-and-dependancies" class="section level3">
+<h3>Packages and Dependancies</h3>
 <pre class="r"><code># install.packages(&quot;remotes&quot;) 
 install.packages(c(&quot;tidyverse&quot;, &quot;dataRetrieval&quot;, &quot;lubridate&quot;, 
 &quot;ggx&quot;, &quot;geosphere&quot;, &quot;ggthemes&quot;, &quot;ggsci&quot;, &quot;ggpubr&quot;, &quot;maps&quot;, &quot;sf&quot;,
@@ -412,6 +406,38 @@ install.packages(c(&quot;tidyverse&quot;, &quot;dataRetrieval&quot;, &quot;lubri
 &quot;ggsn&quot;, &quot;ggsci&quot;, &quot;patchwork&quot;, &quot;cowplot&quot;,  &quot;readr&quot;))
 
 remotes::install_github(&quot;amutaya/easyrbi&quot;)</code></pre>
+</div>
+<div id="analysis" class="section level3">
+<h3>Analysis</h3>
+<p>Steps for each analysis are explained as commented code in all the
+documents.</p>
+<p>To reproduce analysis, follow these these guidelines:</p>
+<div id="richards-baker-index" class="section level4">
+<h4>Richards-Baker Index</h4>
+<ol style="list-style-type: decimal">
+<li><p>Run <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/rbi_Values_Code/rbi_vals.R"><strong>./code/rbi_Values_Code/rbi_vals.R</strong></a>
+to download USGS daily discharge data and calculate a Richards-Baker
+Index for sites specified in <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/data/nesites.csv"><strong>./data/nesites.csv</strong></a>
+over a given time frame. Here we use the <code>rbi_df</code> from the <a href="https://github.com/amutaya/easyrbi"><code>easyrbi</code></a> R
+package.</p></li>
+<li><p>Run <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/Trend_Analysis_Code/trends.R"><strong>./code/Trend_Analysis_Code/trends.R</strong></a>
+to calculate the Mann-Kendall and Sens-Slope values</p></li>
+<li><p>Run <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/Trend_Analysis_Code/trend_analysis_visuals_summary.R"><strong>./code/Trend_Analysis_Code/trend_analysis_visuals_summary.R</strong></a>
+to generate scatter plots showing flashiness trends.</p></li>
+</ol>
+</div>
+<div id="land-use" class="section level4">
+<h4>Land Use</h4>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Run <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/U_S_GeologicalS/gagesII_analysis.R"><strong>./code/U_S_GeologicalS/gagesII_analysis.R</strong></a>
+to analyse dam removals, changes in imperviousness and developed land
+use.</p></li>
+<li><p>Run <a href="https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/U_S_GeologicalS/gagesII_vis.R"><strong>./code/U_S_GeologicalS/gagesII_vis.R</strong></a>
+to visualize relationship between changes in landuse and stream
+flashiness.</p></li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 
