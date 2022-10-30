@@ -45,16 +45,16 @@ Steps for each analysis are explained as commented code in all the documents.
 To reproduce analysis, follow these these guidelines:
 
 #### Richards-Baker Index
-1) Run **code/rbi_Values_Code/rbi_vals.R** to download USGS daily discharge data and calculate a Richards-Baker Index for sites specified in **/data/nesites.csv** over a given time frame. Here we use the `rbi_df`  from the [`easyrbi`](https://github.com/amutaya/easyrbi) R package.
+1) Run [**./code/rbi_Values_Code/rbi_vals.R**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/rbi_Values_Code/rbi_vals.R) to download USGS daily discharge data and calculate a Richards-Baker Index for sites specified in [**./data/nesites.csv**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/data/nesites.csv) over a given time frame. Here we use the `rbi_df`  from the [`easyrbi`](https://github.com/amutaya/easyrbi) R package.
 
-2) Run **code/Trend_Analysis_Code/trends.R** to calculate the Mann-Kendall and Sens-Slope values 
+2) Run [**./code/Trend_Analysis_Code/trends.R**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/Trend_Analysis_Code/trends.R) to calculate the Mann-Kendall and Sens-Slope values 
 
-3) Run **code/Trend_Analysis_Code/trend_analysis_visuals_summary.R** to generate scatter plots showing flashiness trends.
+3) Run [**./code/Trend_Analysis_Code/trend_analysis_visuals_summary.R**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/Trend_Analysis_Code/trend_analysis_visuals_summary.R) to generate scatter plots showing flashiness trends.
 
 #### Land Use
-4) Run **code/U_S_GeologicalS/gagesII_analysis.R** to analyse dam removals, changes in imperviousness and developed land use.
+4) Run [**./code/U_S\_GeologicalS/gagesII_analysis.R**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/U_S_GeologicalS/gagesII_analysis.R) to analyse dam removals, changes in imperviousness and developed land use.
 
-5) Run **code/U_S_GeologicalS/gagesII_vis.R** to visualize relationship between changes in landuse and stream flashiness.
+5) Run [**./code/U_S\_GeologicalS/gagesII_vis.R**](https://github.com/wndlovu/Stream-Flashiness-Index/blob/main/code/U_S_GeologicalS/gagesII_vis.R) to visualize relationship between changes in landuse and stream flashiness.
 
 
 
