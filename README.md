@@ -1,19 +1,14 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 
 # Effects of land use and precipitation patterns on streamflow flashiness trends in the northeast USA
 
-### What is stream flashiness?
+## What is stream flashiness?
 
 - Stream flashiness is the rapidity and frequency of short term changes
   in the streamflow especially during runoff events.
 - Calculated as the ratio between the sum of daily changes in discharge
   and sum of daily discharge
 
-### Abstract
+## Abstract
 
 Examining long term trends in streamflow signatures is useful for
 understanding how changes in land use and precipitation patterns impact
@@ -44,17 +39,9 @@ decreasing. These results give us insight into how watershed regimes
 respond to changing climate, infrastructure, and other associated human
 impacts.
 
-Procedure: To reproduce this analysis you will need to install the
-following packages:
+## Procedure
 
-Available on CRAN: \* `tidyverse` \* `lubridate` \* `ggx` \* `geosphere`
-\* `ggthemes` \* `ggsci` \* `ggpubr` \* `maps` \* `sf` \* `sp` \*
-`rnaturalearth` \* `rnaturalearthdata` \* `ggalt` \* `usmap` \* `ggsn`
-\* `ggsci` \* `patchwork` \* `cowplot` \* `readr`
-
-Available on Github: \* `easyrbi`
-
-To install packages run the following:
+### Packages and Dependancies
 
 ``` r
 # install.packages("remotes") 
@@ -65,3 +52,32 @@ install.packages(c("tidyverse", "dataRetrieval", "lubridate",
 
 remotes::install_github("amutaya/easyrbi")
 ```
+
+### Analysis
+
+Steps for each analysis are explained as commented code in all the
+documents.
+
+To reproduce analysis, follow these these guidelines:
+
+#### Richards-Baker Index
+
+1)  Run **code/rbi_Values_Code/rbi_vals.R** to download USGS daily
+    discharge data and calculate a Richards-Baker Index for sites
+    specified in **/data/nesites.csv** over a given time frame. Here we
+    use the `rbi_df` from the
+    [`easyrbi`](https://github.com/amutaya/easyrbi) R package.
+
+2)  Run **code/Trend_Analysis_Code/trends.R** to calculate the
+    Mann-Kendall and Sens-Slope values
+
+3)  Run **code/Trend_Analysis_Code/trend_analysis_visuals_summary.R** to
+    generate scatter plots showing flashiness trends.
+
+#### Land Use
+
+4)  Run **code/U_S\_GeologicalS/gagesII_analysis.R** to analyse dam
+    removals, changes in imperviousness and developed land use.
+
+5)  Run **code/U_S\_GeologicalS/gagesII_vis.R** to visualize
+    relationship between changes in landuse and stream flashiness.

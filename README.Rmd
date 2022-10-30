@@ -29,33 +29,6 @@ Examining long term trends in streamflow signatures is useful for understanding 
 ## Procedure
 
 ### Packages and Dependancies
-To reproduce this analysis you will need to install the following packages:
-
-Available on CRAN:
-* `tidyverse`
-* `lubridate`
-* `ggx`
-* `geosphere`
-* `ggthemes`
-* `ggsci`
-* `ggpubr`
-* `maps`
-* `sf`
-* `sp`
-* `rnaturalearth`
-* `rnaturalearthdata`
-* `ggalt`
-* `usmap`
-* `ggsn`
-* `ggsci`
-* `patchwork`
-* `cowplot`
-* `readr`
-
-Available on Github:
-* `easyrbi`
-
-To install packages run the following:
 ```{r, eval = FALSE}
 # install.packages("remotes") 
 install.packages(c("tidyverse", "dataRetrieval", "lubridate", 
